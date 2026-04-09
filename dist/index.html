@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutChamps Manager | Liga de Verano</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/assets/index-BK3vI-AG.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-MQUOy4tM.css">
+</head>
+
+<body class="p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center mb-12 gap-6 animate-fade">
+        <div>
+            <h1 class="text-5xl font-black italic tracking-tighter gradient-text uppercase">FUTCHAMPS<span
+                    class="text-blue-500">GRL</span></h1>
+            <div class="flex items-center gap-2 mt-2">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Liga de Verano • Sistema
+                    Económico Activo</p>
+            </div>
+        </div>
+
+        <div class="flex gap-3">
+            <button onclick="window.login()" id="loginBtn"
+                class="glass px-6 py-2.5 rounded-2xl font-bold text-sm hover:bg-slate-800 transition-all border-slate-700/50">Admin
+                Panel</button>
+            <div id="adminControls" class="admin-only flex gap-3">
+                <div id="userBadge"
+                    class="flex items-center glass px-4 py-2.5 rounded-2xl text-[10px] font-black uppercase text-blue-400 border-blue-500/30">
+                </div>
+                <button onclick="window.openSyncModal()"
+                    class="super-admin-only bg-emerald-600 hover:bg-emerald-500 px-4 py-2.5 rounded-2xl text-xs font-black shadow-lg shadow-emerald-500/20 transition-all">SICRONIZAR</button>
+                <button onclick="window.exportJSON()"
+                    class="super-admin-only bg-blue-600 hover:bg-blue-500 px-4 py-2.5 rounded-2xl text-xs font-black shadow-lg shadow-blue-500/20 transition-all">EXPORTAR</button>
+                <label
+                    class="super-admin-only bg-purple-600 hover:bg-purple-500 px-4 py-2.5 rounded-2xl text-xs font-black cursor-pointer shadow-lg shadow-purple-500/20 transition-all">
+                    IMPORTAR <input type="file" id="importFile" class="hidden" onchange="window.importJSON(event)">
+                </label>
+                <button onclick="window.logout()"
+                    class="glass px-4 py-2.5 rounded-2xl text-xs font-black hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/50">SALIR</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Super Admin Tools -->
+    <div id="superAdminPanel"
+        class="super-admin-only-block max-w-7xl mx-auto glass p-8 rounded-[2.5rem] mb-12 animate-fade"
+        style="display:none">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-xs font-black text-blue-500 uppercase tracking-widest mb-4">Gestión de Competición</h3>
+                <div class="flex gap-3">
+                    <input type="text" id="newTeamName" placeholder="Nombre del nuevo equipo"
+                        class="p-4 rounded-2xl w-full outline-none focus:border-blue-500 transition-all">
+                    <button onclick="window.addTeam()"
+                        class="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all">Crear</button>
+                </div>
+            </div>
+            <div>
+                <h3 class="text-xs font-black text-purple-500 uppercase tracking-widest mb-4">Configuración del Servidor
+                </h3>
+                <p class="text-sm text-slate-400">Modo Super Administrador activado. Puedes sincronizar con CopaFacil,
+                    gestionar todos los equipos y exportar datos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- League Grid -->
+    <main id="leagueGrid" class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10"></main>
+
+    <!-- Sync Modal -->
+    <div id="modalOverlay">
+        <div class="glass p-10 rounded-[3rem] max-w-2xl w-full mx-4 shadow-2xl relative">
+            <button onclick="window.closeSyncModal()"
+                class="absolute top-8 right-8 text-slate-500 hover:text-white transition-all text-xl font-bold">×</button>
+            <h2 class="text-3xl font-black italic tracking-tighter text-white mb-6 uppercase">Sincronización CopaFacil
+            </h2>
+
+            <div class="space-y-6">
+                <div class="bg-blue-500/10 border border-blue-500/20 p-6 rounded-3xl">
+                    <p class="text-xs font-bold text-blue-400 mb-2 uppercase">Instrucciones</p>
+                    <ol class="text-sm text-slate-300 space-y-2 list-decimal ml-4">
+                        <li>Abre tu torneo en <a href="https://copafacil.com/-8pzii" target="_blank"
+                                class="text-blue-400 underline decoration-blue-500/30">CopaFacil</a>.</li>
+                        <li>Ve a la pestaña <b>Clasificación</b>.</li>
+                        <li>Copia todo el texto (Ctrl+A, Ctrl+C).</li>
+                        <li>Pégalo en el cuadro de abajo.</li>
+                    </ol>
+                </div>
+
+                <div>
+                    <textarea id="syncDataInput" placeholder="Pega aquí los datos extraídos..."
+                        class="w-full h-40 p-4 rounded-3xl outline-none focus:border-emerald-500 transition-all resize-none text-xs font-mono"></textarea>
+                </div>
+
+                <button onclick="window.processSync()"
+                    class="w-full py-5 bg-emerald-600 hover:bg-emerald-500 rounded-3xl font-black text-sm uppercase tracking-[0.3em] shadow-lg shadow-emerald-500/20 transition-all">Procesar
+                    Sincronización</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
